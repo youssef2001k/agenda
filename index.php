@@ -1,4 +1,5 @@
-<?php
+
+    <?php
 session_start();
 require 'db.php';
 
@@ -17,71 +18,61 @@ $events = $stmt->fetchAll();
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>Agenda</title>
+    <title>Professional Agenda</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        /* Simple styles for the calendar */
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
         }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
+        .container {
+            margin-top: 20px;
         }
-
-        th {
-            background-color: #f2f2f2;
+        .table {
+            background-color: white;
+        }
+        h2, h3 {
+            color: #343a40;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
-
 <body>
-    <h2>Your Agenda</h2>
-    <a href="logout.php">Sign Out</a>
+    <div class="container">
+        <h2>Your Agenda</h2>
+        <a href="logout.php" class="btn btn-danger">Sign Out</a>
+        <a href="add_event.php" class="btn btn-primary">Add New Event</a> <!-- Link to add new event -->
 
-    <!-- Display Events in Calendar Format -->
-    <h3>Events Calendar</h3>
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Date</th>
-            <th>Description</th>
-        </tr>
-        <?php foreach ($events as $event): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($event['title']); ?></td>
-                <td><?php echo htmlspecialchars($event['event_date']); ?></td>
-                <td><?php echo htmlspecialchars($event['description']); ?></td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
+        <h3>Events Calendar</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($events as $event): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($event['title']); ?></td>
+                        <td><?php echo htmlspecialchars($event['event_date']); ?></td>
+                        <td><?php echo htmlspecialchars($event['description']); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 
-    <h3>Add New Event</h3>
-    <form action="index.php" method="POST">
-        <input type="text" name="title" placeholder="Event Title" required><br>
-        <input type="date" name="event_date" required><br>
-        <textarea name="description" placeholder="Event Description"></textarea><br>
-        <button type="submit">Add Event</button>
-    </form>
-
-    <?php
-    // Handle adding new events
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $title = $_POST['title'];
-        $description = $_POST['description'];
-        $event_date = $_POST['event_date'];
-
-        $stmt = $pdo->prepare("INSERT INTO events (user_id, title, description, event_date) VALUES (:user_id, :title, :description, :event_date)");
-        $stmt->execute(['user_id' => $user_id, 'title' => $title, 'description' => $description, 'event_date' => $event_date]);
-
-        header('Location: index.php');
-    }
-    ?>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>
