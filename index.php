@@ -17,71 +17,139 @@ $events = $stmt->fetchAll();
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>Agenda</title>
+    <title>Your Professional Agenda</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        /* Simple styles for the calendar */
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            background-image: linear-gradient(to left, #ff5c8d, #6a82fb);
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: textAnimate 2s ease-out infinite;
+        }
+
+        @keyframes textAnimate {
+            0% { background-position: -500% 0; }
+            50% { background-position: 500% 0; }
+            100% { background-position: -500% 0; }
+        }
+
+        .btn-primary, .btn-danger {
+            font-size: 16px;
+            padding: 14px;
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #6a82fb;
+            color: #fff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #ff5c8d;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .table {
+            background-color: white;
+            margin-top: 20px;
+        }
+
+        .table th, .table td {
             text-align: center;
         }
 
-        th {
-            background-color: #f2f2f2;
+        .table th {
+            background-color: #6a82fb;
+            color: white;
         }
+
+        .table td {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .sign-out-btn {
+            text-align: center;
+            margin-top: 20px;
+        }
+
     </style>
 </head>
-
 <body>
-    <h2>Your Agenda</h2>
-    <a href="logout.php">Sign Out</a>
+    <div class="container">
+        <h2>Your Agenda</h2>
 
-    <!-- Display Events in Calendar Format -->
-    <h3>Events Calendar</h3>
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Date</th>
-            <th>Description</th>
-        </tr>
-        <?php foreach ($events as $event): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($event['title']); ?></td>
-                <td><?php echo htmlspecialchars($event['event_date']); ?></td>
-                <td><?php echo htmlspecialchars($event['description']); ?></td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
+        <a href="add_event.php" class="btn btn-primary">Add New Event</a> <!-- Link to add new event -->
 
-    <h3>Add New Event</h3>
-    <form action="index.php" method="POST">
-        <input type="text" name="title" placeholder="Event Title" required><br>
-        <input type="date" name="event_date" required><br>
-        <textarea name="description" placeholder="Event Description"></textarea><br>
-        <button type="submit">Add Event</button>
-    </form>
+        <h3 class="text-center">Events Calendar</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($events as $event): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($event['title']); ?></td>
+                        <td><?php echo htmlspecialchars($event['event_date']); ?></td>
+                        <td><?php echo htmlspecialchars($event['description']); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
 
-    <?php
-    // Handle adding new events
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $title = $_POST['title'];
-        $description = $_POST['description'];
-        $event_date = $_POST['event_date'];
+        <!-- Sign Out Button below the table -->
+        <div class="sign-out-btn">
+            <a href="logout.php" class="btn btn-primary">Sign Out</a>
+        </div>
+    </div>
 
-        $stmt = $pdo->prepare("INSERT INTO events (user_id, title, description, event_date) VALUES (:user_id, :title, :description, :event_date)");
-        $stmt->execute(['user_id' => $user_id, 'title' => $title, 'description' => $description, 'event_date' => $event_date]);
-
-        header('Location: index.php');
-    }
-    ?>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>
